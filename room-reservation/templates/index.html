@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Sistema de Reservas de Salas{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <!-- Hero Section -->
+    <div class="relative bg-indigo-800">
+        <div class="absolute inset-0">
+            <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg" alt="Modern meeting room">
+            <div class="absolute inset-0 bg-indigo-800 mix-blend-multiply" aria-hidden="true"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">Sistema de Reservas de Salas</h1>
+            <p class="mt-6 text-xl text-indigo-100 max-w-3xl">
+                Gerencie suas reservas de salas de forma simples e eficiente. Reserve espaços para reuniões, 
+                apresentações e eventos com apenas alguns cliques.
+            </p>
+            {% if not current_user.is_authenticated %}
+            <div class="mt-10 flex space-x-4">
+                <a href="{{ url_for('auth.login') }}" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50">
+                    Entrar
+                </a>
+                <a href="{{ url_for('auth.register') }}" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    Registrar
+                </a>
+            </div>
+            {% else %}
+            <div class="mt-10">
+                <a href="{{ url_for('rooms.list') }}" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <i class="fas fa-search mr-2"></i> Ver Salas Disponíveis
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-16 bg-gray-50 overflow-hidden lg:py-24">
+        <div class="relative max-w-xl mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-7xl">
+            <div class="relative">
+                <h2 class="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Uma maneira melhor de gerenciar espaços
+                </h2>
+                <p class="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500">
+                    Simplifique o processo de reserva de salas com nosso sistema intuitivo e eficiente.
+                </p>
+            </div>
+
+            <div class="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
+                <div class="relative">
+                    <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
+                        Recursos principais
+                    </h3>
+
+                    <dl class="mt-10 space-y-10">
+                        <div class="relative">
+                            <dt>
+                                <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                    <i class="fas fa-calendar-check text-xl"></i>
+                                </div>
+                                <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Reservas simplificadas</p>
+                            </dt>
+                            <dd class="mt-2 ml-16 text-base text-gray-500">
+                                Faça reservas de forma rápida e fácil, com confirmação instantânea.
+                            </dd>
+                        </div>
+
+                        <div class="relative">
+                            <dt>
+                                <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                    <i class="fas fa-bell text-xl"></i>
+                                </div>
+                                <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Notificações automáticas</p>
+                            </dt>
+                            <dd class="mt-2 ml-16 text-base text-gray-500">
+                                Receba confirmações e lembretes sobre suas reservas.
+                            </dd>
+                        </div>
+
+                        <div class="relative">
+                            <dt>
+                                <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Disponibilidade em tempo real</p>
+                            </dt>
+                            <dd class="mt-2 ml-16 text-base text-gray-500">
+                                Visualize a disponibilidade das salas em tempo real.
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="mt-10 -mx-4 relative lg:mt-0">
+                    <img class="relative mx-auto rounded-lg shadow-lg" 
+                         src="https://images.pexels.com/photos/1181435/pexels-photo-1181435.jpeg" 
+                         alt="Dashboard interface">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-indigo-50">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-24 lg:px-8 lg:flex lg:items-center lg:justify-between">
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl">
+                <span class="block">Pronto para começar?</span>
+                <span class="block text-indigo-600">Crie sua conta hoje mesmo.</span>
+            </h2>
+            <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+                <div class="inline-flex rounded-md shadow">
+                    <a href="{{ url_for('auth.register') }}" 
+                       class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        Começar agora
+                    </a>
+                </div>
+                <div class="ml-3 inline-flex rounded-md shadow">
+                    <a href="{{ url_for('auth.login') }}" 
+                       class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50">
+                        Fazer login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
