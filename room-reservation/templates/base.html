@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Reservas de Salas{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{{ url_for('index') }}" class="text-xl font-bold text-indigo-600">
+                            <i class="fas fa-calendar-check mr-2"></i>
+                            Reservas
+                        </a>
+                    </div>
+                    
+                    <!-- Navigation Links -->
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="{{ url_for('index') }}" 
+                           class="inline-flex items-center px-1 pt-1 text-gray-700 hover:text-indigo-600">
+                            Home
+                        </a>
+                        {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('rooms.list') }}" 
+                           class="inline-flex items-center px-1 pt-1 text-gray-700 hover:text-indigo-600">
+                            Salas
+                        </a>
+                        <a href="{{ url_for('reservations.my_reservations') }}" 
+                           class="inline-flex items-center px-1 pt-1 text-gray-700 hover:text-indigo-600">
+                            Minhas Reservas
+                        </a>
+                        {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin.dashboard') }}" 
+                           class="inline-flex items-center px-1 pt-1 text-gray-700 hover:text-indigo-600">
+                            Admin
+                        </a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center">
+                    {% if current_user.is_authenticated %}
+                    <div class="ml-3 relative">
+                        <div class="flex items-center space-x-4">
+                            <!-- User Dropdown -->
+                            <div class="relative">
+                                <button type="button" class="flex text-sm rounded-full focus:outline-none" id="user-menu-button">
+                                    <span class="text-gray-700">{{ current_user.username }}</span>
+                                    <i class="fas fa-chevron-down ml-2 mt-1"></i>
+                                </button>
+                                <!-- Dropdown menu -->
+                                <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5" id="user-menu">
+                                    <a href="{{ url_for('auth.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Perfil
+                                    </a>
+                                    <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Sair
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="flex space-x-4">
+                        <a href="{{ url_for('auth.login') }}" 
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50">
+                            Entrar
+                        </a>
+                        <a href="{{ url_for('auth.register') }}" 
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                            Registrar
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+            <button type="button" class="mobile-menu-button p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <span class="sr-only">Abrir menu</span>
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="hidden md:hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+            <a href="{{ url_for('index') }}" 
+               class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
+                Home
+            </a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('rooms.list') }}" 
+               class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
+                Salas
+            </a>
+            <a href="{{ url_for('reservations.my_reservations') }}" 
+               class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
+                Minhas Reservas
+            </a>
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('admin.dashboard') }}" 
+               class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
+                Admin
+            </a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="max-w-7xl mx-auto px-4 mt-4">
+                    <div class="rounded-md p-4 {% if category == 'error' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                {% if category == 'error' %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                {% else %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white shadow-inner mt-8">
+        <div class="max-w-7xl mx-auto py-6 px-4">
+            <div class="text-center text-gray-500 text-sm">
+                &copy; 2023 Sistema de Reservas de Salas. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Toggle mobile menu
+        document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+            document.querySelector('#mobile-menu').classList.toggle('hidden');
+        });
+        
+        // Toggle user dropdown
+        document.querySelector('#user-menu-button')?.addEventListener('click', function() {
+            document.querySelector('#user-menu').classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#user-menu-button')) {
+                document.querySelector('#user-menu')?.classList.add('hidden');
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
